@@ -149,6 +149,15 @@
       }
     });
 
+    // Button controls for jumping (optional)
+    const buttonControls = {
+      jump: false,
+    };
+
+    document.getElementById("jump").addEventListener("click", function () {
+      buttonControls.jump = true;
+    });
+
     // Game logic
     function update() {
       if (gameOver) return;
