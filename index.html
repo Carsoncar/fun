@@ -48,7 +48,7 @@
 <body>
   <canvas id="gameCanvas" width="800" height="400"></canvas>
   
-  <!-- On-screen buttons (optional, if you'd like for additional control) -->
+  <!-- On-screen buttons for touch controls -->
   <div class="button-container">
     <button id="left" class="button">←</button>
     <button id="right" class="button">→</button>
@@ -130,52 +130,51 @@
     let coins = generateCoins(platforms);
     let enemies = generateEnemies(platforms);
 
-    // Tilt control variables
-    let tiltLeft = false;
-    let tiltRight = false;
+    // Button control state variables
+    let buttonLeft = false;
+    let buttonRight = false;
+    let buttonJump = false;
 
-    // Tilt event listener for mobile devices
-    window.addEventListener("deviceorientation", function (event) {
-      // Detect left or right tilt
-      if (event.gamma < -15) {
-        tiltLeft = true;
-        tiltRight = false;
-      } else if (event.gamma > 15) {
-        tiltRight = true;
-        tiltLeft = false;
-      } else {
-        tiltLeft = false;
-        tiltRight = false;
-      }
+    // Button touch event listeners
+    document.getElementById("left").addEventListener("touchstart", function () {
+      buttonLeft = true;
+    });
+    document.getElementById("left").addEventListener("touchend", function () {
+      buttonLeft = false;
     });
 
-    // Button controls for jumping (optional)
-    const buttonControls = {
-      jump: false,
-    };
+    document.getElementById("right").addEventListener("touchstart", function () {
+      buttonRight = true;
+    });
+    document.getElementById("right").addEventListener("touchend", function () {
+      buttonRight = false;
+    });
 
-    document.getElementById("jump").addEventListener("click", function () {
-      buttonControls.jump = true;
+    document.getElementById("jump").addEventListener("touchstart", function () {
+      buttonJump = true;
+    });
+    document.getElementById("jump").addEventListener("touchend", function () {
+      buttonJump = false;
     });
 
     // Game logic
     function update() {
       if (gameOver) return;
 
-      // Horizontal movement based on tilt
-      if (tiltLeft) {
+      // Horizontal movement based on button presses
+      if (buttonLeft) {
         player.dx = -player.speed;
-      } else if (tiltRight) {
+      } else if (buttonRight) {
         player.dx = player.speed;
       } else {
         player.dx = 0;
       }
 
-      // Jump logic (using screen button)
-      if (buttonControls.jump && player.onGround) {
+      // Jump logic using touch button
+      if (buttonJump && player.onGround) {
         player.dy = player.jumpPower;
         player.onGround = false;
-        buttonControls.jump = false; // Reset jump
+        buttonJump = false; // Reset jump
       }
 
       player.dy += player.gravity;
